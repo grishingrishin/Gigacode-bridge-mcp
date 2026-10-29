@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="310" viewBox="0 0 1200 310" role="img" aria-labelledby="title desc">
+<title id="title">Review before applying</title><desc id="desc">Validate inputs, execute in a detached worktree, check changed files, then return the patch. Applying the patch is a separate client decision.</desc>
+<rect width="1200" height="310" rx="24" fill="#f2f5f7"/>
+<g font-family="Arial, Helvetica, sans-serif"><text x="48" y="62" font-size="28" font-weight="700" fill="#172d3c">Review before applying</text>
+<g fill="#fff" stroke="#b7c8d3" stroke-width="2"><rect x="48" y="105" width="240" height="108" rx="12"/><rect x="336" y="105" width="240" height="108" rx="12"/><rect x="624" y="105" width="240" height="108" rx="12"/><rect x="912" y="105" width="240" height="108" rx="12"/></g>
+<g text-anchor="middle" font-size="21" font-weight="700" fill="#172d3c"><text x="168" y="147">01 Validate</text><text x="456" y="147">02 Execute</text><text x="744" y="147">03 Inspect</text><text x="1032" y="147">04 Return</text></g>
+<g text-anchor="middle" font-size="16" fill="#496374"><text x="168" y="181">Paths + clean repository</text><text x="456" y="181">Bounded child process</text><text x="744" y="181">Changed-file allowlist</text><text x="1032" y="181">Patch for client review</text></g>
+<g stroke="#187d68" stroke-width="3" fill="none"><path d="M298 159h28l-8-6m8 6-8 6"/><path d="M586 159h28l-8-6m8 6-8 6"/><path d="M874 159h28l-8-6m8 6-8 6"/></g>
+<text x="48" y="267" fill="#496374" font-size="18">No automatic application. No automatic commits. Acceptance remains with the client.</text></g></svg>
