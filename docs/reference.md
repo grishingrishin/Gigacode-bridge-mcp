@@ -37,7 +37,7 @@ codex mcp add gigacode-bridge-mcp -- "$PWD/bin/gigacode-bridge-mcp"
 codex mcp get gigacode-bridge-mcp
 ```
 
-In the corresponding `[mcp_servers.gigacode-bridge-mcp]` section of the client's configuration, set `tool_timeout_sec = 900` to allow long tasks plus Git setup and cleanup. Restart the client and inspect its MCP tool list. The exposed tool is `delegate_task`.
+Use `make setup` to configure Codex automatically. Restart the client and inspect its MCP tool list. The exposed tool is `delegate_task`.
 
 Other MCP clients can launch `/absolute/path/gigacode-bridge-mcp` using stdio. Standard output is reserved for protocol messages.
 
@@ -57,7 +57,6 @@ args = [
   "mcp-host",
   "/absolute/path/to/gigacode-bridge-mcp"
 ]
-tool_timeout_sec = 900
 ```
 
 Replace the host alias and executable paths. Use fixed paths without spaces or shell metacharacters in the SSH command. Use an absolute binary path and ensure Git is on the remote PATH. Ensure shell startup scripts do not print banners to stdout.
@@ -73,7 +72,7 @@ The repository must already exist on the execution host. File arguments refer to
 | task | string | 1-12,000 characters |
 | files | string[] | 1-30 canonical absolute paths |
 | acceptanceCriteria | string[] | 1-20 nonempty criteria |
-| timeoutSec | integer | 1-600 seconds |
+| timeoutSec | integer | Validated by the server |
 
 All files must be existing, tracked regular files in one clean repository. Symbolic-link paths, parent traversal, new files and dirty repositories are unsupported. On macOS, resolve aliases such as /tmp to canonical paths before calling.
 
@@ -115,8 +114,8 @@ The server never applies patches to the source checkout or creates commits. A po
 
 - Child arguments use os/exec without a shell.
 - Combined child output is limited to 1 MiB; each Git command has the same output bound.
-- Timeout, cancellation and excess output trigger process-group termination. Subprocess pipe cleanup has a one-second bound.
-- Every Git command has a separate 20-second bound. timeoutSec covers the GigaCode process, not total request duration.
+- Timeout, cancellation and excess output trigger process-group termination.
+- Execution and cleanup are bounded internally.
 - Only one task runs per server process.
 - Final tracked, untracked and ignored changes are checked against the allowlist.
 - Symbolic-link outputs and changes to HEAD are rejected.

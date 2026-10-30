@@ -47,7 +47,7 @@ From the extracted archive directory:
 make setup
 ```
 
-Select **Codex** for automatic registration and a 900-second tool timeout, or **Other client** for binary installation and manual connection instructions. Restart the client after installation.
+Select **Codex** for automatic registration and configuration, or **Other client** for binary installation and manual connection instructions. Restart the client after installation.
 
 | Command | Action |
 | --- | --- |
@@ -67,7 +67,7 @@ Only the executable is extracted from the archive. From a source checkout withou
 
 If Make is unavailable, run `bash scripts/install.sh choose` from the extracted directory. Installation requires Bash and standard POSIX utilities. It does not require sudo.
 
-For other MCP clients, use stdio, the printed absolute executable path, no arguments, and a tool timeout of 900 seconds. Configuration field names depend on the client.
+For other MCP clients, use stdio, the printed absolute executable path, no arguments. Configuration field names depend on the client.
 
 By default, GigaCode is expected at `~/.gigacode/bin/gigacode`. For another path, see [Custom GigaCode path](#custom-gigacode-path).
 
@@ -124,7 +124,7 @@ codex mcp add gigacode-bridge-mcp \
   -- "$HOME/.local/bin/gigacode-bridge-mcp"
 ```
 
-First confirm that `command -v gigacode` returns a path. After updating the registration, check `tool_timeout_sec` and restart the client.
+First confirm that `command -v gigacode` returns a path. After updating the registration, restart the client.
 
 **macOS blocks the app:** binaries are not yet signed or notarized. If you trust the source, allow this specific app through Privacy & Security settings. Do not disable system protection globally.
 

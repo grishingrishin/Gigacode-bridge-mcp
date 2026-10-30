@@ -4,7 +4,7 @@ Readiness is compiled into the server and runs automatically for ordinary delega
 
 ## Diagnostics and verification
 
-Before creating a worktree, delegate_task probes the CLI with a one-turn READY request in a temporary directory, using plan approval mode. The probe has an 8-second execution budget (or timeoutSec when smaller), plus bounded process cleanup. Success is cached in the server process for 60 seconds; failure for 30 seconds. preflight_failed instructs the primary agent to handle the task directly without retry. Slow but available providers can fail this budget. Cached success cannot guarantee availability for the next task. Git validation occurs before the probe and has its own deadlines.
+Before creating a worktree, delegate_task probes the CLI with a one-turn READY request in a temporary directory, using plan approval mode. The probe and cleanup are bounded internally. Successful and failed checks are cached briefly. preflight_failed instructs the primary agent to handle the task directly without retry. Slow but available providers can fail this budget. Cached success cannot guarantee availability for the next task. Git validation occurs before the probe and has its own deadlines.
 
 Run `./bin/gigacode-bridge-mcp --health` for a standalone real readiness check; unlike --check, this calls the configured provider and can consume tokens. Successful readiness does not shorten the subsequent task timeout. --check remains an offline MCP protocol check.
 
