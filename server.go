@@ -18,7 +18,9 @@ import (
 )
 
 func newServer() *mcp.Server {
-	server := mcp.NewServer(&mcp.Implementation{Name: "gigacode-bridge-mcp", Version: "0.2.0"}, nil)
+	server := mcp.NewServer(&mcp.Implementation{Name: "gigacode-bridge-mcp", Version: "0.2.0"}, &mcp.ServerOptions{
+		Instructions: "Review every returned patch independently before applying it. If delegate_task returns preflight_failed, continue the task directly without retrying delegation. Treat this as unavailable or too slow, not a confirmed outage. Routine availability handling is internal: do not narrate diagnostic steps unless the user asks or they block completion. Report task outcomes truthfully and never claim GigaCode made changes when it did not.",
+	})
 	var busy atomic.Bool
 	mcp.AddTool(server, &mcp.Tool{Name: "delegate_task", Description: "Run a small edit in a temporary detached Git worktree. Supply canonical absolute paths to existing tracked files in one clean repository, exact acceptance criteria, and a timeout of 1-600 seconds. Returns a patch for independent review; never applies or commits it."}, func(ctx context.Context, _ *mcp.CallToolRequest, in Input) (*mcp.CallToolResult, Report, error) {
 		var report Report
@@ -84,9 +86,21 @@ func check(ctx context.Context) (err error) {
 
 func main() {
 	checkMode := flag.Bool("check", false, "Check MCP stdio and validation without calling GigaCode")
+	healthMode := flag.Bool("health", false, "Probe real GigaCode readiness with an 8-second budget")
 	flag.Parse()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+	if *healthMode {
+		binary, err := executable()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err = preflight(ctx, binary, 8*time.Second); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("PASS: GigaCode confirmed readiness")
+		return
+	}
 	if *checkMode {
 		bounded, cancel := context.WithTimeout(ctx, 15*time.Second)
 		defer cancel()

@@ -161,6 +161,13 @@ func delegate(ctx context.Context, in Input) (report Report, err error) {
 	if err != nil {
 		return report, err
 	}
+	binary, err := executable()
+	if err != nil {
+		return report, err
+	}
+	if err = preflight(ctx, binary, min(8*time.Second, time.Duration(in.TimeoutSec)*time.Second)); err != nil {
+		return report, err
+	}
 	base, err := git(ctx, root, "rev-parse", "HEAD")
 	if err != nil {
 		return report, err
@@ -195,14 +202,6 @@ func delegate(ctx context.Context, in Input) (report Report, err error) {
 		return report, err
 	}
 	prompt := "Perform one small task in the current worktree. Modify only the listed files. Do not commit, stage, change Git metadata, access other directories or run shell commands. Report edits and checks briefly. Task specification: " + string(details)
-	binary := os.Getenv("GIGACODE_BIN")
-	if binary == "" {
-		home, e := os.UserHomeDir()
-		if e != nil {
-			return report, e
-		}
-		binary = filepath.Join(home, ".gigacode", "bin", "gigacode")
-	}
 	raw, err := run(ctx, work, binary, []string{"--prompt", prompt, "--approval-mode", "auto-edit", "--output-format", "json", "--max-session-turns", "8", "--chat-recording=false"}, time.Duration(in.TimeoutSec)*time.Second)
 	if err != nil {
 		return report, err
@@ -214,6 +213,9 @@ func delegate(ctx context.Context, in Input) (report Report, err error) {
 	text, err := summary(raw)
 	if err != nil {
 		return report, err
+	}
+	if len(changed) == 0 || patch == "" {
+		return report, fail("no_changes", "GigaCode returned without changing files; no patch to review")
 	}
 	return Report{Status: "review_required", Repository: root, BaseCommit: base, ChangedFiles: changed, Patch: patch, Summary: text, Checks: "Acceptance criteria must be verified independently by the client"}, nil
 }

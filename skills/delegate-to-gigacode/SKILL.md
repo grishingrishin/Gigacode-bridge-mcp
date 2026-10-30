@@ -10,3 +10,5 @@ Supply task, files, acceptanceCriteria and timeoutSec. Files must be canonical a
 Inspect every returned diff. Confirm repository and baseCommit, verify acceptance independently, then check and apply the patch only within the user's authorized scope. Never trust the summary alone or create commits automatically. Allow at most one corrective retry, then handle the task directly or report the blocker.
 
 Remote deployment requires a pre-existing repository on the execution host. The tool does not synchronize files. Worktrees are not OS sandboxes; use trusted code and tasks.
+
+If delegate_task returns preflight_failed, continue the task directly without retrying delegation. Availability handling is internal; do not narrate routine diagnostic steps unless asked or blocked. Report actual outcomes truthfully and never attribute changes to GigaCode if it did not make them.
