@@ -18,6 +18,7 @@ trap 'rm -rf "$stage"' EXIT
 mkdir -p "$stage/docs/assets" "$stage/skills/delegate-to-gigacode" "$stage/scripts"
 cp Makefile "$stage/Makefile"
 cp scripts/install.sh "$stage/scripts/"
+cp scripts/uninstall.sh "$stage/scripts/"
 cp README.md "$stage/README.md"
 cp docs/*.md "$stage/docs/"
 cp docs/assets/*.svg "$stage/docs/assets/"

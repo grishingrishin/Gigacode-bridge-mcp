@@ -134,13 +134,23 @@ First confirm that `command -v gigacode` returns a path. After updating the regi
 
 To update, download a new archive, close sessions using the MCP server, repeat `make install`, and restart the client. The path stays the same, so registration does not need to change.
 
-Remove the Codex connection:
+To remove the installation and choose whether to deregister Codex:
 
 ```sh
-codex mcp remove gigacode-bridge-mcp
+make teardown
 ```
 
-You can then remove the installed binary and the optional skill.
+Select **Codex connection and binary** to remove the named MCP entry and installed binary. The existing Codex configuration is backed up first; other entries are preserved. For other clients, remove their connection manually.
+
+To remove only the binary without changing any client configuration:
+
+```sh
+make uninstall
+```
+
+Use the same `INSTALL_DIR` as during installation. Codex deregistration respects `CODEX_HOME`. Repeating removal is safe when the installation is already absent. Neither command deletes GigaCode, project files, configuration backups, or the optional skill. Remove a manually installed skill separately if desired. Restart active clients to stop processes that were already running.
+
+Without Make, use `bash scripts/uninstall.sh choose` for the interactive flow or `bash scripts/uninstall.sh manual` for binary-only removal.
 
 ## Build from source
 
