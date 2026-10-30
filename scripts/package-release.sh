@@ -15,7 +15,9 @@ fi
 mkdir -p "$output"
 stage=$(mktemp -d)
 trap 'rm -rf "$stage"' EXIT
-mkdir -p "$stage/docs/assets" "$stage/skills/delegate-to-gigacode"
+mkdir -p "$stage/docs/assets" "$stage/skills/delegate-to-gigacode" "$stage/scripts"
+cp Makefile "$stage/Makefile"
+cp scripts/install.sh "$stage/scripts/"
 cp README.md "$stage/README.md"
 cp docs/*.md "$stage/docs/"
 cp docs/assets/*.svg "$stage/docs/assets/"
@@ -24,7 +26,7 @@ for target in darwin/arm64 darwin/amd64 linux/arm64 linux/amd64; do
   target_os=${target%/*}
   target_arch=${target#*/}
   CGO_ENABLED=0 GOOS="$target_os" GOARCH="$target_arch" go build -trimpath -ldflags='-s -w' -o "$stage/gigacode-bridge-mcp" .
-  tar -czf "$output/gigacode-bridge-mcp_${version}_${target_os}_${target_arch}.tar.gz" -C "$stage" gigacode-bridge-mcp README.md docs skills
+  COPYFILE_DISABLE=1 tar -czf "$output/gigacode-bridge-mcp_${version}_${target_os}_${target_arch}.tar.gz" -C "$stage" gigacode-bridge-mcp Makefile scripts README.md docs skills
 done
 cd "$output"
 if command -v sha256sum >/dev/null 2>&1; then

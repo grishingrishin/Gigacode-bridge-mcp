@@ -39,36 +39,37 @@ Use `uname -s -m` to identify the operating system and architecture. Windows is 
 
 Extract the archive into its own directory and open a terminal there. It contains the binary, this guide, and the documentation.
 
-### 2. Install the binary
+### 2. Install and configure
 
-From the extracted directory:
-
-```sh
-mkdir -p "$HOME/.local/bin"
-install -m 755 ./gigacode-bridge-mcp "$HOME/.local/bin/gigacode-bridge-mcp"
-```
-
-By default, GigaCode is expected at `~/.gigacode/bin/gigacode`. For a different installation path, see [Custom GigaCode path](#custom-gigacode-path).
-
-### 3. Register the MCP server
-
-**Codex:**
+From the extracted archive directory:
 
 ```sh
-codex mcp add gigacode-bridge-mcp -- "$HOME/.local/bin/gigacode-bridge-mcp"
+make setup
 ```
 
-Add this to the newly created `[mcp_servers.gigacode-bridge-mcp]` section in `~/.codex/config.toml`:
+Select **Codex** for automatic registration and a 900-second tool timeout, or **Other client** for binary installation and manual connection instructions. Restart the client after installation.
 
-```toml
-tool_timeout_sec = 900
+| Command | Action |
+| --- | --- |
+| `make setup` | Install and select a client interactively |
+| `make install` | Install the binary only |
+| `make check` | Check the installed MCP connection |
+
+Codex CLI must be available on PATH for automatic registration. The installer respects CODEX_HOME and backs up an existing config.toml before modifying it. Other client entries are preserved. The optional skill is installed separately as described below.
+
+The default install directory is `~/.local/bin`. Override it with `INSTALL_DIR=/absolute/path`. From a source checkout, you can install directly from a downloaded archive:
+
+```sh
+make setup ARCHIVE=/absolute/path/to/release.tar.gz
 ```
 
-Restart your active Codex session. In `/mcp`, you should see `gigacode-bridge-mcp` with the `delegate_task` tool.
+Only the executable is extracted from the archive. From a source checkout without ARCHIVE, the installer builds locally and requires Go. From an extracted release, no Go installation is required.
 
-**Another MCP client:** select **stdio** and set the command to the absolute path of the installed binary. No arguments are needed. If the client exposes a tool timeout setting, set it to 900 seconds. Field names vary between clients.
+If Make is unavailable, run `bash scripts/install.sh choose` from the extracted directory. Installation requires Bash and standard POSIX utilities. It does not require sudo.
 
-The MCP client starts the server on demand. No interactive GigaCode session is required.
+For other MCP clients, use stdio, the printed absolute executable path, no arguments, and a tool timeout of 900 seconds. Configuration field names depend on the client.
+
+By default, GigaCode is expected at `~/.gigacode/bin/gigacode`. For another path, see [Custom GigaCode path](#custom-gigacode-path).
 
 ## Usage
 
@@ -131,7 +132,7 @@ First confirm that `command -v gigacode` returns a path. After updating the regi
 
 ## Update and uninstall
 
-To update, download a new archive, close sessions using the MCP server, repeat the `install` command, and restart the client. The path stays the same, so registration does not need to change.
+To update, download a new archive, close sessions using the MCP server, repeat `make install`, and restart the client. The path stays the same, so registration does not need to change.
 
 Remove the Codex connection:
 
