@@ -1,11 +1,11 @@
-# Выпуск версии
+# Release procedure
 
-Workflow `.github/workflows/release.yml` запускается после отправки тега `vX.Y.Z`.
-Он проверяет код на macOS и Linux, собирает четыре архива и SHA256SUMS, затем создаёт **черновик** GitHub Release. Для обычных проверок не нужны GigaCode, авторизация провайдера или секреты. Токен GitHub Actions используется только для создания релиза.
+The `.github/workflows/release.yml` workflow runs when a `vX.Y.Z` tag is pushed.
+It verifies the code on macOS and Linux, builds four archives and SHA256SUMS, and creates a **draft** GitHub Release. Standard checks do not require GigaCode, provider authentication, or secrets. The GitHub Actions token is used only to create the release.
 
-Перед выпуском обновите версию Implementation в server.go, проверьте изменения и создайте коммит по правилам проекта. Создание и отправка тега — отдельное решение сопровождающего. После успешного workflow проверьте файлы черновика и нажмите Publish release. До публикации файлы не доступны обычным посетителям страницы Releases. Повторный запуск не перезаписывает существующий релиз автоматически.
+Before releasing, update the Implementation version in server.go, review the changes, and create a commit following the project's conventions. Creating and pushing a tag is a separate maintainer decision. After the workflow succeeds, review the draft assets and select Publish release. Draft assets are not available to ordinary visitors of the Releases page. Rerunning the workflow does not automatically overwrite an existing release.
 
-Локальная подготовка:
+Local preparation:
 
 ```sh
 go test -race -shuffle=on -count=1 ./...
@@ -13,6 +13,6 @@ go vet ./...
 bash scripts/package-release.sh v0.2.0
 ```
 
-Результат: `dist/v0.2.0/`. Скрипт откажется перезаписывать существующую папку. Каждый архив содержит один исполняемый файл, README, документацию, иллюстрации и необязательный Skill. Исходники, локальные настройки, токены и Git-история в архив не входят. Go нужен только при сборке.
+Output: `dist/v0.2.0/`. The script refuses to overwrite an existing directory. Each archive contains one executable, the README, documentation, illustrations, and the optional skill. Source code, local configuration, tokens, and Git history are excluded. Go is required only for building.
 
-SHA256SUMS проверяет целостность скачивания; это не цифровая подпись. Бинарники macOS пока не подписаны и не нотарифицированы. Проверяйте Gatekeeper на целевой машине; не советуйте отключать его целиком. Кросс-компиляция не заменяет запуск на каждой целевой архитектуре.
+SHA256SUMS verifies download integrity; it is not a digital signature. macOS binaries are not yet signed or notarized. Check Gatekeeper behavior on the target machine; do not recommend disabling it globally. Cross-compilation does not replace execution on each target architecture.
