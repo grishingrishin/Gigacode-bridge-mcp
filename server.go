@@ -86,10 +86,19 @@ func check(ctx context.Context) (err error) {
 
 func main() {
 	checkMode := flag.Bool("check", false, "Check MCP stdio and validation without calling GigaCode")
+	installMode := flag.Bool("install-codex", false, "Register this binary in Codex and configure its tool timeout")
 	healthMode := flag.Bool("health", false, "Probe real GigaCode readiness with an 8-second budget")
 	flag.Parse()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+	if *installMode {
+		bounded, cancel := context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+		if err := installCodex(bounded); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 	if *healthMode {
 		binary, err := executable()
 		if err != nil {
