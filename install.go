@@ -86,7 +86,7 @@ func codexTimeout(content string) (string, error) {
 			}
 			found = true
 			inside = true
-			result.WriteString(header + "\ntool_timeout_sec = 900\n")
+			result.WriteString(header + "\ntool_timeout_sec = 180\n")
 			continue
 		}
 		if strings.HasPrefix(trimmed, "[") {

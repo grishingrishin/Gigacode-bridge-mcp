@@ -11,7 +11,7 @@ func TestCodexTimeoutPreservesOtherSettings(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	expected := strings.Replace(original, "command = \"/path with spaces/server\"\ntool_timeout_sec = 30", "tool_timeout_sec = 900\ncommand = \"/path with spaces/server\"", 1)
+	expected := strings.Replace(original, "command = \"/path with spaces/server\"\ntool_timeout_sec = 30", "tool_timeout_sec = 180\ncommand = \"/path with spaces/server\"", 1)
 	if got != expected {
 		t.Fatalf("unexpected configuration: %s", got)
 	}

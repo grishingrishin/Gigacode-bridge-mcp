@@ -36,7 +36,7 @@ func validText(s string, limit int) bool {
 }
 
 func validate(ctx context.Context, in Input) (string, []string, error) {
-	if !validText(in.Task, 12000) || len(in.Files) < 1 || len(in.Files) > 30 || len(in.AcceptanceCriteria) < 1 || len(in.AcceptanceCriteria) > 20 || in.TimeoutSec < 1 || in.TimeoutSec > 600 {
+	if !validText(in.Task, 12000) || len(in.Files) < 1 || len(in.Files) > 30 || len(in.AcceptanceCriteria) < 1 || len(in.AcceptanceCriteria) > 20 || in.TimeoutSec < 1 || in.TimeoutSec > 120 {
 		return "", nil, fail("invalid_input", "Invalid task, files, criteria or timeout")
 	}
 	for _, c := range in.AcceptanceCriteria {

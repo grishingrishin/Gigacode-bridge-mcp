@@ -31,5 +31,5 @@ mv "$destination/gigacode-bridge-mcp.new" "$destination/gigacode-bridge-mcp"
 if [[ "$mode" == codex ]]; then
   "$destination/gigacode-bridge-mcp" --install-codex
 else
-  printf 'Command: %s/gigacode-bridge-mcp\nTransport: stdio\nArguments: none\nTool timeout: 900 seconds\n' "$destination"
+  printf 'Command: %s/gigacode-bridge-mcp\nTransport: stdio\nArguments: none\nTool timeout: 180 seconds\n' "$destination"
 fi
